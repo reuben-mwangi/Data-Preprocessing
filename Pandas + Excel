@@ -1,0 +1,91 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled5.ipynb",
+      "private_outputs": true,
+      "provenance": [],
+      "authorship_tag": "ABX9TyM3a2Fxyv76zQ+QzDhud0Bp",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/reuben-mwangi/Data-Preprocessing/blob/main/Pandas%20%2B%20Excel\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Reporting and Factsheets with Pandas\n",
+        "## Pandas + Excel"
+      ],
+      "metadata": {
+        "id": "U-cIgnmZ-mzU"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "mb1oMeFT9DcI"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "!pip install xlsxwriter\n",
+        "import xlsxwriter\n",
+        "# Sample DataFrame\n",
+        "df = pd.DataFrame(np.random.randn(5, 4), columns=['one', 'two', 'three', 'four'],\n",
+        "                  index=['a', 'b', 'c', 'd', 'e'])\n",
+        "\n",
+        "# Dump Pandas DataFrame to Excel sheet\n",
+        "writer = pd.ExcelWriter('myreport.xlsx', engine='xlsxwriter')\n",
+        "df.to_excel(writer, sheet_name='Sheet1', startrow=2)\n",
+        "\n",
+        "# Get book and sheet objects for futher manipulation below\n",
+        "book = writer.book\n",
+        "sheet = writer.sheets['Sheet1']\n",
+        "\n",
+        "# Title\n",
+        "bold = book.add_format({'bold': True, 'size': 24})\n",
+        "sheet.write('A1', 'My Report', bold)\n",
+        "\n",
+        "# Color negative values in the DataFrame in red\n",
+        "format1 = book.add_format({'font_color': '#E93423'})\n",
+        "sheet.conditional_format('B4:E8', {'type': 'cell', 'criteria': '<=', 'value': 0, 'format': format1})\n",
+        "\n",
+        "# Chart\n",
+        "chart = book.add_chart({'type': 'column'})\n",
+        "chart.add_series({'values': '=Sheet1!B4:B8', 'name': '=Sheet1!B3', 'categories': '=Sheet1!$A$4:$A$8'})\n",
+        "chart.add_series({'values': '=Sheet1!C4:C8', 'name': '=Sheet1!C3'})\n",
+        "chart.add_series({'values': '=Sheet1!D4:D8', 'name': '=Sheet1!D3'})\n",
+        "chart.add_series({'values': '=Sheet1!E4:E8', 'name': '=Sheet1!E3'})\n",
+        "sheet.insert_chart('A10', chart)\n",
+        "\n",
+        "writer.save()\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n"
+      ]
+    }
+  ]
+}
