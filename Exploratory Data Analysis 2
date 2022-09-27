@@ -1,0 +1,679 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "private_outputs": true,
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyP5z9rBZ4l/i994dHhQqN4J",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/reuben-mwangi/Data-Preprocessing/blob/main/Exploratory%20Data%20Analysis%202\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Exploratory Data Analysis using Python — A Case Study\n",
+        "Analyzing agricultural-raw-material-prices dataset over the years.\n",
+        "\n",
+        "This dataset consists of prices and price % change for coarse wool, copra, cotton, fine wool, hard log, hard sawn wood, hide, plywood, rubber, soft log, soft sawn wood, and wood pulp.\n",
+        "\n",
+        "The following topics are covered in this article:\n",
+        "\n",
+        "1 downloading the dataset\n",
+        "\n",
+        "2 data preparation and \n",
+        "\n",
+        "3 exploratory analysis and visualization\n",
+        "\n",
+        "4 asking and answering questions\n",
+        "\n",
+        "5 inferences and conclusion\n",
+        "\n",
+        "6future work \n",
+        "\n",
+        "7 references\n"
+      ],
+      "metadata": {
+        "id": "OK17w0Qi8GXm"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Downloading the Dataset\n",
+        "\n",
+        "In this tutorial, we’ll analyze the agricultural-raw-material-prices dataset."
+      ],
+      "metadata": {
+        "id": "I3wNNmsH9fgb"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "import pandas as pd"
+      ],
+      "metadata": {
+        "id": "Ajon5cnD9jw0"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Loading the dataset\n"
+      ],
+      "metadata": {
+        "id": "p21mxaVf9tU_"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from google.colab import files\n",
+        "uploaded = files.upload()\n",
+        "\n",
+        "df = pd.read_csv(\"/content/agricultural_raw_material.csv\")"
+      ],
+      "metadata": {
+        "id": "oZ6Qemab90RA"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Exploring the dataset"
+      ],
+      "metadata": {
+        "id": "N1m6eN6w_Heu"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.head()"
+      ],
+      "metadata": {
+        "id": "cwG8XuqbAOII"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.shape"
+      ],
+      "metadata": {
+        "id": "sZHi0gOZAafu"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "df.info()\n",
+        "#Checking Null Values of each column\n",
+        "df.isnull().sum()"
+      ],
+      "metadata": {
+        "id": "3PXmZwgP_K1V"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# handle missing data,invalid values and incorrect"
+      ],
+      "metadata": {
+        "id": "Kz0yYiw4_7rw"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Replacing %, \",\" and \"-\"\n",
+        "df = df.replace('%', '', regex=True)\n",
+        "df = df.replace(',', '', regex=True)\n",
+        "df = df.replace('-', '', regex=True)\n",
+        "df = df.replace('', np.nan)\n",
+        "df = df.replace('MAY90', np.nan)"
+      ],
+      "metadata": {
+        "id": "GTxlvojyAA_R"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        " #Dropping rows with NaN values\n",
+        "df = df.dropna()"
+      ],
+      "metadata": {
+        "id": "Dq56aPlZAw2Z"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Check to see if all NaN values are resolved\n",
+        "df.isnull().sum()"
+      ],
+      "metadata": {
+        "id": "mxLosYs3Awyv"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Converting data type to float\n",
+        "lst = [\"Coarse wool Price\", \"Coarse wool price % Change\", \"Copra Price\", \"Copra price % Change\", \"Cotton price % Change\",\"Fine wool Price\", \"Fine wool price % Change\", \"Hard log price % Change\", \"Hard sawnwood price % Change\", \"Hide price % change\", \"Plywood price % Change\", \"Rubber price % Change\", \"Softlog price % Change\", \"Soft sawnwood price % Change\", \"Wood pulp price % Change\"]\n",
+        "df[lst] = df[lst].astype(\"float\")\n"
+      ],
+      "metadata": {
+        "id": "nPss44ujA92Y"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.dtypes"
+      ],
+      "metadata": {
+        "id": "KXG4H2tNBMQe"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#DateTime columns\n",
+        "\n",
+        "formatting the datetime column and setting it as index for the dataset"
+      ],
+      "metadata": {
+        "id": "P632mNTxBSbq"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.Month  = pd.to_datetime(df.Month.str.upper(), format='%b%y', yearfirst=False)# Indexing month\n",
+        "df = df.set_index('Month')"
+      ],
+      "metadata": {
+        "id": "HssIS9sdBTmE"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df.head()"
+      ],
+      "metadata": {
+        "id": "bXoTFEdpBdyH"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Exploratory Analysis and Visualization\n",
+        "Let’s begin by importingmatplotlib.pyplot and seaborn."
+      ],
+      "metadata": {
+        "id": "mM0vYbslBlTt"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import seaborn as sns\n",
+        "import matplotlib\n",
+        "import matplotlib.pyplot as plt\n",
+        "%matplotlib inline\n",
+        "sns.set_style('darkgrid')\n",
+        "matplotlib.rcParams['font.size'] = 14\n",
+        "matplotlib.rcParams['figure.figsize'] = (9, 5)\n",
+        "matplotlib.rcParams['figure.facecolor'] = '#00000000'"
+      ],
+      "metadata": {
+        "id": "oqvZtCstBrlN"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# HeatMap"
+      ],
+      "metadata": {
+        "id": "YgrRe7tzCGzt"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#raw-materials list\n",
+        "raw_data=['Coarse wool Price',  'Copra Price','Cotton Price', 'Fine wool Price',  'Hard log Price', 'Hard sawnwood Price',\n",
+        " 'Hide Price', 'Plywood Price', 'Rubber Price', 'Softlog Price', 'Soft sawnwood Price', 'Wood pulp Price']\n",
+        "#getting the correlation matrix\n",
+        "corrmat = df[raw_data].corr()\n",
+        "#setting the size of plot\n",
+        "fig = plt.figure(figsize = (12, 9))\n",
+        "#masking the upper traingle part since matrix is symmetric(repetitive) \n",
+        "mask = np.triu(np.ones_like(corrmat, dtype=bool))\n",
+        "sns.heatmap(corrmat, vmax = .8,mask=mask, square = True, annot = True)\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "Or0fYwHjCIqn"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# comment\n",
+        "The Heatmap depicts correlation between the raw-materials higher the correlated value higher chance of being two raw-materials related but not necessarily\n",
+        "\n",
+        "Explore one or more columns by plotting a graph below, and add some explanation about it Correlation matrix"
+      ],
+      "metadata": {
+        "id": "YWY3hc0dCb6t"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.figure(figsize=(30,15))\n",
+        "changelist=['Copra price % Change','Softlog price % Change','Rubber price % Change','Cotton price % Change','Coarse wool price % Change','Fine wool price % Change','Hard log price % Change','Hard sawnwood price % Change','Hide price % change','Plywood price % Change','Soft sawnwood price % Change','Wood pulp price % Change']\n",
+        "#generate a correlation matrix for the whole dataset\n",
+        "corrMatrix = df[changelist].corr()\n",
+        "sns.heatmap(corrMatrix, annot=True)\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "tVAMGTo9Cdpv"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# From this plot we can say that there is almost no relation between % change of raw-material prices\n",
+        "\n",
+        "    the negative value implies two variables are negatively correlated (one increase,other decrease)\n",
+        "    Zero implies no relation\n",
+        "    other wise higher the value higher the chance of relation."
+      ],
+      "metadata": {
+        "id": "GqQcWlLEC6Rh"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# prices and their % change plots\n",
+        "Coarse wool"
+      ],
+      "metadata": {
+        "id": "DWP63KsnDB3R"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "axes=df[[\"Coarse wool Price\", \"Coarse wool price % Change\"]].plot(figsize=(11, 9), subplots=True, linewidth=1)"
+      ],
+      "metadata": {
+        "id": "DHe_kI6gC7sC"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Similarly we could find the visualization of all other features given in dataset.\n",
+        "# Asking and Answering Questions\n",
+        "\n",
+        "Q1: Find out the normal price change for each raw material"
+      ],
+      "metadata": {
+        "id": "IGu0qSlyDWHJ"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#df[[\"Wood pulp Price\", \"Wood pulp price % Change\"]].hist(figsize=(11, 9), linewidth=1)\n",
+        "\n",
+        "changelist=['Copra price % Change','Softlog price % Change','Rubber price % Change','Cotton price % Change','Coarse wool price % Change','Fine wool price % Change','Hard log price % Change','Hard sawnwood price % Change','Hide price % change','Plywood price % Change','Soft sawnwood price % Change','Wood pulp price % Change']\n",
+        "for i in range(len(changelist)):\n",
+        "    plt.figure(figsize=(12,12))\n",
+        "    df[changelist[i]].hist(figsize=(11, 9), linewidth=1)\n",
+        "    plt.xlabel('% Change')\n",
+        "    plt.ylabel('count')\n",
+        "    plt.legend(changelist[i:],loc='upper center',bbox_to_anchor=(1.2,1))\n"
+      ],
+      "metadata": {
+        "id": "aeG1EpzFDZm0"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "We can observe that most raw-materials have ideal frequent %change less than 5%\n",
+        "\n",
+        "##Q2: Find the raw-material that has lowest price over years"
+      ],
+      "metadata": {
+        "id": "qKE1JMMVDp4f"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.figure(figsize=(10, 10))\n",
+        "materialslist=['Copra Price','Softlog Price','Rubber Price','Cotton Price','Coarse wool Price','Fine wool Price','Hard log Price','Hard sawnwood Price','Hide Price','Plywood Price','Soft sawnwood Price','Wood pulp Price']\n",
+        "for i in range(len(materialslist)):\n",
+        "    plt.subplot(4,3,i+1)\n",
+        "    plt.subplots_adjust( hspace=1 ,wspace=0.5)\n",
+        "    plt.title(materialslist[i])\n",
+        "    plt.plot(df[materialslist[i]])\n",
+        "    plt.xticks(rotation=90)\n",
+        "plt.suptitle(\"Raw-Materials price comparision\")\n"
+      ],
+      "metadata": {
+        "id": "JuM_4SAuDr_h"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "    We can see cotton and rubber are of lowest prices\n",
+        "    lets compare prices to better understand which is lowest"
+      ],
+      "metadata": {
+        "id": "MATRoJM9D4Xi"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.figure(figsize=(10, 10))\n",
+        "plt.plot(df[['Cotton Price','Rubber Price']])\n",
+        "plt.title(\"Raw-Materials price comparision\")\n",
+        "plt.xlabel('Years')\n",
+        "plt.ylabel('Prices')\n",
+        "plt.legend(['Cotton Price','Rubber Price'],loc='upper center',bbox_to_anchor=(1.2,1))"
+      ],
+      "metadata": {
+        "id": "arNaj-7GD5FH"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "cotton is lowest price rawmaterials in recent years\n",
+        "\n",
+        "Both cotton and rubber are low price materials"
+      ],
+      "metadata": {
+        "id": "Usm6r-ZdEJqB"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "plt.figure(figsize=(10, 10))\n",
+        "plt.plot(df[['Copra Price','Softlog Price','Rubber Price','Cotton Price','Coarse wool Price','Fine wool Price','Hard log Price','Hard sawnwood Price','Hide Price','Plywood Price','Soft sawnwood Price','Wood pulp Price']])\n",
+        "plt.title(\"Raw-Materials price comparision\")\n",
+        "plt.xlabel('Years')\n",
+        "plt.ylabel('Prices')\n",
+        "plt.legend(['Copra Price','Softlog Price','Rubber Price','Cotton Price','Coarse wool Price','Fine wool Price','Hard log Price','Hard sawnwood Price','Hide Price','Plywood Price','Soft sawnwood Price','Wood pulp Price'],loc='upper center',bbox_to_anchor=(1.2,1))"
+      ],
+      "metadata": {
+        "id": "jjAGqRGeEKV8"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "From the graphs we could analyze raw materials into types according their price over years\n",
+        "\n",
+        "low price materials\n",
+        "\n",
+        "-cotton,hide,softlog,Hard log,Soft sawnwood Price,rubber\n",
+        "\n",
+        "High price materials\n",
+        "\n",
+        "-coarse wool,copra,fine wool,hard sawnwood,woodpulp,plywood\n",
+        "\n",
+        "Q3: which raw material has the highest and lowest price % change"
+      ],
+      "metadata": {
+        "id": "IcPvRCTfEW5y"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import random as random"
+      ],
+      "metadata": {
+        "id": "IzIVRUfcEX2O"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#lowchangelist=['Cotton price % Change','Hide price % change','Softlog price % Change','Hard log price % Change','Soft sawnwood price % Change','Plywood price % Change']\n",
+        "plt.figure(figsize=(12,12))\n",
+        "for i in range(len(changelist)):\n",
+        "   \n",
+        "    r = random.random()\n",
+        "    b = random.random()\n",
+        "    g = random.random()\n",
+        "    color = (r, g, b)\n",
+        "    plt.subplot(4,3,i+1)\n",
+        "    plt.subplots_adjust( hspace=1 ,wspace=0.5)\n",
+        "    plt.plot(df[changelist[i]],c=color)\n",
+        "    plt.xticks(rotation=90)\n",
+        "    plt.title(changelist[i])\n",
+        "    plt.xlabel('Years')\n",
+        "    plt.ylabel('% Change')\n",
+        "    #plt.legend(changelist[i:],loc='upper center',bbox_to_anchor=(1.2,1))\n"
+      ],
+      "metadata": {
+        "id": "IYCVz2yiEjQA"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#We can see the highest % change at more than 60 for soft sawnwood and lowest % change is for plywood at less at 20\n",
+        "\n",
+        "Q4: Find the raw materials with drastic price change"
+      ],
+      "metadata": {
+        "id": "fN9S4hXQEtdz"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#plt.figure(figsize=(12,12))\n",
+        "#sns.scatterplot(df['Cotton Price'],df.index,hue=df['Fine wool Price']);\n",
+        "lowlist=['Cotton Price','Hide Price','Softlog Price','Hard log Price','Soft sawnwood Price','Rubber Price']\n",
+        "plt.figure(figsize=(12,12))\n",
+        "plt.ylabel('Prices')\n",
+        "plt.xlabel('Years')\n",
+        "#plt.legend(lowlist,loc='upper center',bbox_to_anchor=(1.2,1))\n",
+        "for i in range(len(lowlist)):\n",
+        "    sns.scatterplot(y=df[lowlist[i]],x=df.index);\n",
+        "    plt.legend(lowlist,loc='upper center',bbox_to_anchor=(1.2,1))\n"
+      ],
+      "metadata": {
+        "id": "fUqkpYftEzuU"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#plt.figure(figsize=(12,12))\n",
+        "#sns.scatterplot(df['Cotton Price'],df.index,hue=df['Fine wool Price']);\n",
+        "#lowlist=['Cotton Price','Hide Price','Softlog Price','Hard log Price','Soft sawnwood Price','Plywood Price']\n",
+        "highlist=['Coarse wool Price','Copra Price','Fine wool Price','Hard sawnwood Price','Plywood Price','Wood pulp Price']\n",
+        "#lowchangelist=['Cotton price % Change','Hide price % change','Softlog price % Change','Hard log price % Change','Soft sawnwood price % Change','Plywood price % Change']\n",
+        "plt.figure(figsize=(12,12))\n",
+        "plt.xlabel('Prices')\n",
+        "plt.ylabel('Years')\n",
+        "for i in range(len(highlist)):\n",
+        "    sns.scatterplot(x=df[highlist[i]],y=df.index);\n",
+        "    plt.legend(highlist,loc='upper center',bbox_to_anchor=(1.2,1))\n"
+      ],
+      "metadata": {
+        "id": "uObNQFFKFED_"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Price change is drastic for hard log price among low price range materials and Among high price materials it is Fine wool prices\n",
+        "\n",
+        "Q5: Figure out the price range of low priced raw-materials"
+      ],
+      "metadata": {
+        "id": "RMUpU_HZFLHj"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#plt.figure(figsize=(10, 10))\n",
+        "lowlist=['Cotton Price','Hide Price','Softlog Price','Hard log Price','Soft sawnwood Price','Rubber Price']\n",
+        "for i in range(6):\n",
+        "    #plt.title(lowlist[i])\n",
+        "    plt.subplot(2, 3, i+1)\n",
+        "    plt.subplots_adjust( hspace=0.5 )\n",
+        "    sns.boxplot(x=df[lowlist[i]])"
+      ],
+      "metadata": {
+        "id": "bxRiUueAFL7k"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Box Plot gives us the distribution of data\n",
+        "\n",
+        "It includes: Inter quartile range is between Q3 and Q1 minimum, first quartile (Q1), median, third quartile (Q3), and maximum and outliers\n",
+        "\n",
+        "Let us save and upload our work to Jovian before continuing."
+      ],
+      "metadata": {
+        "id": "Ms0LmmtVFTYP"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Inferences and Conclusion\n",
+        "\n",
+        "    We found out the high range and low range raw-materials according to their prices.\n",
+        "    high and low %Change materials\n",
+        "    We could identify the the range of prices change over the years.\n",
+        "    Correlation between them using a heatmap"
+      ],
+      "metadata": {
+        "id": "YErP3QpBFX85"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Future Work\n",
+        "\n",
+        "    Further we could find out relationship between raw-materials in details and with the help of business knowledge we could figure out the closest related raw materials\n",
+        "    We could also predict the prices of raw-materials by analysing the previous years\n",
+        "    Predicting the range of price change and based on that we could plan our raw material usage in advance for the coming the year and figure out any alternative materials."
+      ],
+      "metadata": {
+        "id": "bjAAjtHOFdjb"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# link to dataset:https://www.kaggle.com/datasets/kianwee/agricultural-raw-material-prices-19902020"
+      ],
+      "metadata": {
+        "id": "Kb8JQ5PdFeob"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
